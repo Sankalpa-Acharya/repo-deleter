@@ -9,25 +9,22 @@ import { BsCursorFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import RepoContainer from "@/components/repocontainer";
 import RepoCardSkeleton from '@/components/repocardskeleton';
+
 interface Repo {
   id: number;
   name: string;
   description: string | null;
   stargazers_count: number;
   forks_count: number;
+  private: boolean
 }
 
-interface APIReposne {
-  items: Repo[]
-}
 
-interface FormData {
-  username: string;
-  token: string;
-}
+// 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
 
-const fetchRepos = async ({ username, token }: FormData): Promise<APIReposne> => {
-  const response = await fetch(`https://api.github.com/search/repositories?q=user:${username}`, {
+
+const fetchRepos = async (token: string): Promise<Repo[]> => {
+  const response = await fetch(`https://api.github.com/user/repos?visibility=all&per_page=100`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     }
@@ -37,23 +34,21 @@ const fetchRepos = async ({ username, token }: FormData): Promise<APIReposne> =>
 };
 
 export default function Home() {
-  const [formData, setFormData] = useState<FormData>({ username: '', token: '' });
+  const [token, setToken] = useState<string>("");
 
-  const { data: repos, isLoading, error, refetch } = useQuery<APIReposne, Error>({
-    queryKey: ['repos', formData.username],
-    queryFn: () => fetchRepos(formData),
+  const { data: repos, isLoading, error, refetch } = useQuery<Repo[], Error>({
+    queryKey: ['repos', token],
+    queryFn: () => fetchRepos(token),
     enabled: false,
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setToken(prev => (e.target.value));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('first')
-    if (formData.username) refetch();
+    if (token) refetch();
   };
 
   return (
@@ -67,20 +62,8 @@ export default function Home() {
               id="token"
               name="token"
               placeholder="Personal Access Token"
-              value={formData.token}
+              value={token}
               onChange={handleInputChange}
-            />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
-            <Label className="flex gap-2" htmlFor="username"><FaUser size={16} />Username</Label>
-            <Input
-              type="text"
-              id="username"
-              name="username"
-              placeholder="Github Username"
-              value={formData.username}
-              onChange={handleInputChange}
-              required
             />
           </div>
         </div>
@@ -89,18 +72,24 @@ export default function Home() {
       {isLoading && <RepoCardSkeleton />}
       {error && <p className="text-red-500 mt-4">Error: {error.message}</p>}
 
-      {repos && repos.items.length > 0 && (
+      {repos && repos.length > 0 && (
         <div className="mt-10">
           <p className="font-bold flex gap-2 text-xl items-center">
             Select the Repositories <BsCursorFill />
           </p>
+          <div>
+            <Input
+              className='mt-5'
+              placeholder="Search Repo"
+            />
+          </div>
           <Button className="glass-effect sticky top-0 text-white hover:bg-red-900 w-full">
             <MdDelete size={20} />
           </Button>
-          <RepoContainer repos={repos.items} />
+          <RepoContainer repos={repos.slice(1, repos.length)} />
         </div>
       )}
-      {repos && repos.items.length === 0 && (
+      {repos && repos.length === 0 && (
         <p className="mt-4">No repositories found for this user.</p>
       )}
     </div>

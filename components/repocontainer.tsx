@@ -8,6 +8,7 @@ interface Repo {
     description: string | null;
     stargazers_count: number;
     forks_count: number;
+    private: boolean
 }
 interface RepoContainerProps {
     repos: Repo[]
@@ -21,6 +22,7 @@ const RepoContainer: React.FC<RepoContainerProps> = ({ repos }) => {
                 <RepoCard
                     selected={false}
                     key={repo.id}
+                    isPrivate={repo.private}
                     name={repo.name}
                     description={repo.description || ""}
                     stars={repo.stargazers_count}

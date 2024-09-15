@@ -15,16 +15,17 @@ interface RepoCardProps {
     description: string;
     stars: number;
     forks: number;
-    selected: boolean
+    selected: boolean;
+    isPrivate: boolean
 }
 
-const RepoCard: React.FC<RepoCardProps> = ({ name, description, stars, forks, selected }) => {
+const RepoCard: React.FC<RepoCardProps> = ({ name, description, stars, forks, selected, isPrivate }) => {
     return (
         <div>
             <Card className={`shadow-lg cursor-pointer ${selected ? 'border-indigo-400' : ''} `}>
                 <CardHeader className='flex flex-row items-center justify-between'>
                     <CardTitle>{name}</CardTitle>
-                    <p className='text-sm rounded-full border p-1 px-3'>Public</p>
+                    <p className={`text-sm ${isPrivate ? "bg-blue-900" : "bg-green-900"} rounded-full  border p-1 px-3`}>{isPrivate ? "Private" : "Public"}</p>
                 </CardHeader>
                 <CardContent>
                     <p className='truncate'>{description || "No description provided"}</p>

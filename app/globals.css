@@ -104,4 +104,13 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 
 
 
+.card-effect{
+  background: rgba(37, 44, 239, 0.081);
+box-shadow: 0 0px 7px 0 rgba(37, 44, 239, 0.25);
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+
+
 

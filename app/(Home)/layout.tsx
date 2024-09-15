@@ -7,7 +7,7 @@ export default function RootLayout({
 }>) {
     return (
         <div className="flex flex-col items-center">
-            <div className="max-w-[60rem] px-5 lg:px-0 mt-5 w-full">
+            <div className="md:max-w-[60rem] md:px-5 lg:px-0 mt-5 w-full">
                 <Providers>{children}</Providers>
             </div>
         </div>

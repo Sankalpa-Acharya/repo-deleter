@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
     Card,
     CardContent,
@@ -6,9 +6,8 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import { FaCodeFork } from "react-icons/fa6";
-import { FaStar } from "react-icons/fa6";
+} from "@/components/ui/card";
+import { FaCodeFork, FaStar } from "react-icons/fa6";
 
 interface RepoCardProps {
     name: string;
@@ -16,19 +15,22 @@ interface RepoCardProps {
     stars: number;
     forks: number;
     selected: boolean;
-    isPrivate: boolean
+    isPrivate: boolean;
+    onClick: (name: string) => void;
 }
 
-const RepoCard: React.FC<RepoCardProps> = ({ name, description, stars, forks, selected, isPrivate }) => {
+const RepoCard: React.FC<RepoCardProps> = ({ name, description, stars, forks, selected, isPrivate, onClick }) => {
     return (
-        <div>
-            <Card className={`shadow-lg cursor-pointer ${selected ? 'border-indigo-400' : ''} `}>
+        <div onClick={() => onClick(name)}>
+            <Card className={`shadow-lg cursor-pointer ${selected ? 'card-effect border-2' : ''}`}>
                 <CardHeader className='flex flex-row items-center justify-between'>
                     <CardTitle>{name}</CardTitle>
-                    <p className={`text-sm ${isPrivate ? "bg-blue-900" : "bg-green-900"} rounded-full  border p-1 px-3`}>{isPrivate ? "Private" : "Public"}</p>
+                    <p className={`text-sm ${isPrivate ? "bg-blue-900" : "bg-green-900"} rounded-full  border p-1 px-3`}>
+                        {isPrivate ? "Private" : "Public"}
+                    </p>
                 </CardHeader>
                 <CardContent>
-                    <p className='truncate'>{description || "No description provided"}</p>
+                    <p className='truncate'>{description || 'No description provided'}</p>
                 </CardContent>
                 <CardFooter className='flex gap-3'>
                     <div className='flex items-center gap-1'>
@@ -42,7 +44,7 @@ const RepoCard: React.FC<RepoCardProps> = ({ name, description, stars, forks, se
                 </CardFooter>
             </Card>
         </div>
-    )
-}
+    );
+};
 
-export default RepoCard
+export default RepoCard;

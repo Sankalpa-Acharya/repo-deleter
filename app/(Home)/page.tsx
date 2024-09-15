@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FaKey, FaUser } from "react-icons/fa6";
+import { FaKey } from "react-icons/fa6";
 import { BsCursorFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import RepoContainer from "@/components/repocontainer";
@@ -16,25 +16,23 @@ interface Repo {
   description: string | null;
   stargazers_count: number;
   forks_count: number;
-  private: boolean
+  private: boolean;
 }
 
-
-// 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
-
-
 const fetchRepos = async (token: string): Promise<Repo[]> => {
-  const response = await fetch(`https://api.github.com/user/repos?visibility=all&per_page=100`, {
+  const response = await fetch(`https://api.github.com/user/repos?visibility=all&per_page=100&affiliation=owner`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     }
   });
   if (!response.ok) throw new Error('Failed to fetch repos');
+  console.log('it is fetching')
   return response.json();
 };
 
 export default function Home() {
   const [token, setToken] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const { data: repos, isLoading, error, refetch } = useQuery<Repo[], Error>({
     queryKey: ['repos', token],
@@ -43,13 +41,21 @@ export default function Home() {
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setToken(prev => (e.target.value));
+    setToken(e.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (token) refetch();
   };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value.toLowerCase());
+  };
+
+  const filteredRepos = repos?.filter((repo) =>
+    repo.name.toLowerCase().includes(searchQuery)
+  );
 
   return (
     <div className="m-10">
@@ -71,7 +77,6 @@ export default function Home() {
       </form>
       {isLoading && <RepoCardSkeleton />}
       {error && <p className="text-red-500 mt-4">Error: {error.message}</p>}
-
       {repos && repos.length > 0 && (
         <div className="mt-10">
           <p className="font-bold flex gap-2 text-xl items-center">
@@ -81,12 +86,16 @@ export default function Home() {
             <Input
               className='mt-5'
               placeholder="Search Repo"
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
           </div>
+
           <Button className="glass-effect sticky top-0 text-white hover:bg-red-900 w-full">
             <MdDelete size={20} />
           </Button>
-          <RepoContainer repos={repos.slice(1, repos.length)} />
+
+          <RepoContainer repos={filteredRepos ?? []} />
         </div>
       )}
       {repos && repos.length === 0 && (

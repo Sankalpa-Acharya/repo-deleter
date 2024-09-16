@@ -24,7 +24,7 @@ const RepoCard: React.FC<RepoCardProps> = ({ name, description, stars, forks, se
         <div onClick={() => onClick(name)}>
             <Card className={`shadow-lg cursor-pointer ${selected ? 'card-effect border-2' : ''}`}>
                 <CardHeader className='flex flex-row items-center justify-between'>
-                    <CardTitle>{name}</CardTitle>
+                    <CardTitle>{name.split('/')[1]}</CardTitle>
                     <p className={`text-sm ${isPrivate ? "bg-blue-900" : "bg-green-900"} rounded-full  border p-1 px-3`}>
                         {isPrivate ? "Private" : "Public"}
                     </p>

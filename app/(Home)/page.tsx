@@ -1,7 +1,6 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FaKey } from "react-icons/fa6";
@@ -9,10 +8,11 @@ import { BsCursorFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import RepoContainer from "@/components/repocontainer";
 import RepoCardSkeleton from '@/components/repocardskeleton';
+import { Button } from '@/components/ui/button';
 
 interface Repo {
   id: number;
-  name: string;
+  full_name: string;
   description: string | null;
   stargazers_count: number;
   forks_count: number;
@@ -26,14 +26,20 @@ const fetchRepos = async (token: string): Promise<Repo[]> => {
     }
   });
   if (!response.ok) throw new Error('Failed to fetch repos');
-  console.log('it is fetching')
   return response.json();
 };
+
+
 
 export default function Home() {
   const [token, setToken] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
-
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedToken = localStorage.getItem("token") || "";
+      setToken(savedToken);
+    }
+  }, []);
   const { data: repos, isLoading, error, refetch } = useQuery<Repo[], Error>({
     queryKey: ['repos', token],
     queryFn: () => fetchRepos(token),
@@ -42,6 +48,7 @@ export default function Home() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setToken(e.target.value);
+    localStorage.setItem("token", e.target.value)
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -54,7 +61,7 @@ export default function Home() {
   };
 
   const filteredRepos = repos?.filter((repo) =>
-    repo.name.toLowerCase().includes(searchQuery)
+    repo.full_name.toLowerCase().includes(searchQuery)
   );
 
   return (
@@ -91,9 +98,7 @@ export default function Home() {
             />
           </div>
 
-          <Button className="glass-effect sticky top-0 text-white hover:bg-red-900 w-full">
-            <MdDelete size={20} />
-          </Button>
+
 
           <RepoContainer repos={filteredRepos ?? []} />
         </div>

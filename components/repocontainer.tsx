@@ -15,7 +15,7 @@ interface Repo {
 }
 
 interface RepoContainerProps {
-    repos: Repo[];
+    reposInfo: Repo[];
     token: string;
 }
 
@@ -45,13 +45,14 @@ const repoRemover = async (repos: string[], token: string) => {
     }
 };
 
-const RepoContainer: React.FC<RepoContainerProps> = ({ repos, token }) => {
+const RepoContainer: React.FC<RepoContainerProps> = ({ reposInfo, token }) => {
     const [selectedRepos, setSelectedRepos] = useState<string[]>([]);
-
+    const [repos, setRepos] = useState(reposInfo);
     const { mutate: deleteRepos } = useMutation({
         mutationFn: () => repoRemover(selectedRepos, token),
         onSuccess: () => {
             setSelectedRepos([]);
+            setRepos((prev) => prev.filter((repo) => !selectedRepos.includes(repo.full_name)));
         },
         onError: (error: Error) => {
             toast.error(`Error: ${error.message}`);

@@ -97,7 +97,7 @@ export default function Home() {
               onChange={handleSearchChange}
             />
           </div>
-          <RepoContainer token={token} repos={filteredRepos ?? []} />
+          <RepoContainer token={token} reposInfo={filteredRepos ?? []} />
         </div>
       )}
       {repos && repos.length === 0 && (

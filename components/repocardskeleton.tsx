@@ -6,7 +6,6 @@ import { BsCursorFill } from 'react-icons/bs'
 import {
     Card,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,

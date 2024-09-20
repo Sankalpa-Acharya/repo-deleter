@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FaKey } from "react-icons/fa6";
 import { BsCursorFill } from "react-icons/bs";
-import { MdDelete } from "react-icons/md";
 import RepoContainer from "@/components/repocontainer";
 import RepoCardSkeleton from '@/components/repocardskeleton';
 import { Button } from '@/components/ui/button';
@@ -40,6 +39,7 @@ export default function Home() {
       setToken(savedToken);
     }
   }, []);
+
   const { data: repos, isLoading, error, refetch } = useQuery<Repo[], Error>({
     queryKey: ['repos', token],
     queryFn: () => fetchRepos(token),
@@ -97,10 +97,7 @@ export default function Home() {
               onChange={handleSearchChange}
             />
           </div>
-
-
-
-          <RepoContainer repos={filteredRepos ?? []} />
+          <RepoContainer token={token} repos={filteredRepos ?? []} />
         </div>
       )}
       {repos && repos.length === 0 && (

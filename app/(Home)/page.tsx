@@ -80,7 +80,7 @@ export default function Home() {
               value={token}
               onChange={handleInputChange}
             />
-            <Link className='text-sm' href={"https://github.com/settings/tokens/new?scopes=delete_repo,repo&description=Repo%20Remover%20Token"}>GetMyToken</Link>
+
           </div>
         </div>
         <Button type="submit" className="w-full">Fetch Repos</Button>

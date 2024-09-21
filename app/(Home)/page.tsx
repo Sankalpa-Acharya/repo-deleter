@@ -8,6 +8,7 @@ import { BsCursorFill } from "react-icons/bs";
 import RepoContainer from "@/components/repocontainer";
 import RepoCardSkeleton from '@/components/repocardskeleton';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface Repo {
   id: number;
@@ -69,7 +70,8 @@ export default function Home() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div className="flex gap-5">
           <div className="grid w-full items-center gap-1.5">
-            <Label className="flex gap-2" htmlFor="token"><FaKey size={16} /> Personal Access Token</Label>
+            <Label className="flex items-center gap-2" htmlFor="token"><FaKey size={16} /> Personal Access Token
+              <Link target='_blank' className='text-sm text-indigo-500 underline' href={"https://github.com/settings/tokens/new?scopes=delete_repo,repo&description=Repo%20Remover%20Token"}>Get my token</Link></Label>
             <Input
               type="password"
               id="token"
@@ -78,6 +80,7 @@ export default function Home() {
               value={token}
               onChange={handleInputChange}
             />
+            <Link className='text-sm' href={"https://github.com/settings/tokens/new?scopes=delete_repo,repo&description=Repo%20Remover%20Token"}>GetMyToken</Link>
           </div>
         </div>
         <Button type="submit" className="w-full">Fetch Repos</Button>

@@ -30,7 +30,6 @@ const fetchRepos = async (token: string): Promise<Repo[]> => {
 };
 
 
-
 export default function Home() {
   const [token, setToken] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -58,11 +57,12 @@ export default function Home() {
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value.toLowerCase());
+    setSearchQuery(e.target.value);
   };
 
-  const filteredRepos = repos?.filter((repo) =>
-    repo.full_name.toLowerCase().includes(searchQuery)
+  const filteredRepos = repos?.filter((repo) => {
+    return repo.full_name.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+  }
   );
 
   return (

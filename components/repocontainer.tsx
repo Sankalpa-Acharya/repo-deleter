@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import RepoCard from './repocard';
 import { MdDelete } from "react-icons/md";
 import { Button } from "@/components/ui/button";
@@ -48,6 +48,11 @@ const repoRemover = async (repos: string[], token: string) => {
 const RepoContainer: React.FC<RepoContainerProps> = ({ reposInfo, token }) => {
     const [selectedRepos, setSelectedRepos] = useState<string[]>([]);
     const [repos, setRepos] = useState(reposInfo);
+
+    useEffect(() => {
+        setRepos(reposInfo)
+    }, [reposInfo])
+
     const { mutate: deleteRepos } = useMutation({
         mutationFn: () => repoRemover(selectedRepos, token),
         onSuccess: () => {
